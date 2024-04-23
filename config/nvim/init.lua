@@ -921,6 +921,7 @@ require("lazy").setup({
 
 			-- Required dependency for nvim-dap-ui
 			-- 'nvim-neotest/nvim-nio',
+			"Joakker/lua-json5", -- Remember to run install script (not sure how to do that yet from here)
 
 			-- Installs the debug adapters for you
 			"williamboman/mason.nvim",
@@ -946,6 +947,7 @@ require("lazy").setup({
 				dap_vscode_filetypes = { "c", "cpp", "netrw", "h" }, -- Added "netrw" so that you can get to the debugger menu from most places (i.e. not having to be in a c/h file)
 			})
 
+			require("dap.ext.vscode").json_decode = require("json5").parse
 			-- Hack that replaces '${workspaceRoot}' in the launch.json files with cwd so that the elf files are found by the debugger
 			-- Note that this will only work when launching nvim from the root directory of the project, so it's brittle
 			require("dap.ext.vscode").load_launchjs() -- load .vsocde/launch.json
