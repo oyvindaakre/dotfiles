@@ -951,11 +951,13 @@ require("lazy").setup({
 			require("dap.ext.vscode").load_launchjs() -- load .vsocde/launch.json
 
 			local c_table = dap.configurations.c
-			for _, v in pairs(c_table) do
-				v["cwd"] = vim.fn.getcwd() -- replaces ${workspaceRoot} with cwd
-			end
+			if c_table ~= nil then
+				for _, v in pairs(c_table) do
+					v["cwd"] = vim.fn.getcwd() -- replaces ${workspaceRoot} with cwd
+				end
 
-			dap.configurations.c = c_table -- back configuration to dap
+				dap.configurations.c = c_table -- write back configuration to dap
+			end
 
 			-- Debugger keymap
 			vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
