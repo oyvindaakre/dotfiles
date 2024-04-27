@@ -20,6 +20,11 @@ return {
 	config = function()
 		local dap = require("dap")
 		dap.set_log_level("DEBUG")
+
+		require("mason-nvim-dap").setup({
+			automatic_installation = false,
+			ensure_installed = { "delve" },
+		})
 		-- Set up and register with nvim-dap
 		require("dap-cortex-debug").setup({
 			debug = false, -- log debug messages
