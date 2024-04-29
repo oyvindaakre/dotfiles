@@ -13,7 +13,6 @@ return {
 			"Joakker/lua-json5",
 			run = "./install.sh",
 		},
-		-- Personally prefer to use Mason to install Marus/cortex-debug". If installing from here then make sure to set 'extension_path' to where lazy installed cortex-debug
 		"jedrzejboczar/nvim-dap-cortex-debug", -- An extension for nvim-dap providing integration with Marus/cortex-debug debug adapter.
 	},
 	config = function()
@@ -34,7 +33,11 @@ return {
 			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 		end, { desc = "Debug: Set Breakpoint" })
 		vim.keymap.set("n", "<Leader>dc", dap.continue, { desc = "Debug: Start/Continue" })
-		vim.keymap.set("n", "<Leader>de", dap.terminate, { desc = "Debug: Terminate " })
+		vim.keymap.set("n", "<Leader>dt", dap.terminate, { desc = "Debug: Terminate " })
+		vim.keymap.set("n", "<Leader>dq", function()
+			dap.terminate()
+			dapui.close()
+		end, { desc = "[D]ebug: [Q]uit" })
 
 		-- Automatically open the different windows when starting DAP
 		dap.listeners.before.attach.dapui_config = function()
