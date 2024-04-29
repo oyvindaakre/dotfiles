@@ -1,30 +1,101 @@
 return {
-	"mfussenegger/nvim-dap", -- DAP client
+	"mfussenegger/nvim-dap",
 
 	dependencies = {
-		-- Creates a beautiful debugger UI
-		"rcarriga/nvim-dap-ui",
-
-		-- Required dependency for nvim-dap-ui
-		"nvim-neotest/nvim-nio",
-		"Joakker/lua-json5", -- Remember to run install script (not sure how to do that yet from here)
-
-		-- Installs the debug adapters for you
-		"williamboman/mason.nvim",
-		"jay-babu/mason-nvim-dap.nvim",
-
-		-- Add your own debuggers here
-		-- Personally prefer to use Mason to install Marus/cortex-debug". If installing from here then make sure to set 'extension_path' to where lazy installed cortex-debug
+		{
+			"rcarriga/nvim-dap-ui",
+			dependencies = {
+				"nvim-neotest/nvim-nio",
+			},
+		},
+		{
+			-- Need a json parser that accepts the vscode launch files
+			"Joakker/lua-json5",
+			run = "./install.sh",
+		},
 		"jedrzejboczar/nvim-dap-cortex-debug", -- An extension for nvim-dap providing integration with Marus/cortex-debug debug adapter.
 	},
 	config = function()
 		local dap = require("dap")
-		dap.set_log_level("DEBUG")
+		local dapui = require("dapui")
 
-		require("mason-nvim-dap").setup({
-			automatic_installation = false,
-			ensure_installed = { "delve" },
+		require("dapui").setup()
+
+		-- Debug keymap
+		vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })
+		vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
+		vim.keymap.set("n", "<F3>", dap.step_out, { desc = "Debug: Step Out" })
+		vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
+		-- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+		vim.keymap.set("n", "<F7>", dapui.toggle, { desc = "Debug: See last session result." })
+		vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+		vim.keymap.set("n", "<leader>B", function()
+			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+		end, { desc = "Debug: Set Breakpoint" })
+		vim.keymap.set("n", "<Leader>dc", dap.continue, { desc = "Debug: Start/Continue" })
+		vim.keymap.set("n", "<Leader>dt", dap.terminate, { desc = "Debug: Terminate " })
+		vim.keymap.set("n", "<Leader>dq", function()
+			dap.terminate()
+			dapui.close()
+		end, { desc = "[D]ebug: [Q]uit" })
+
+		-- Automatically open the different windows when starting DAP
+		dap.listeners.before.attach.dapui_config = function()
+			dapui.open()
+		end
+		dap.listeners.before.launch.dapui_config = function()
+			dapui.open()
+		end
+		dap.listeners.before.event_terminated.dapui_config = function()
+			dapui.close()
+		end
+		dap.listeners.before.event_exited.dapui_config = function()
+			dapui.close()
+		end
+
+		-- Setup dapui
+		dapui.setup({
+			-- Set icons to characters that are more likely to work in every terminal.
+			--    Feel free to remove or use ones that you like more! :)
+			--    Don't feel like these are good choices.
+			icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+			controls = {
+				icons = {
+					pause = "⏸",
+					play = "▶",
+					step_into = "⏎",
+					step_over = "⏭",
+					step_out = "⏮",
+					step_back = "b",
+					run_last = "▶▶",
+					terminate = "⏹",
+					disconnect = "⏏",
+				},
+			},
 		})
+
+		-- Configure native GDB debug adapter
+		dap.adapters.gdb = {
+			type = "executable",
+			command = "gdb",
+			args = { "-i", "dap" },
+		}
+
+		-- Add a basic debug configuration for native C programs
+		dap.configurations.c = {
+			{
+				name = "Launch",
+				type = "gdb",
+				request = "launch",
+				program = function()
+					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+				end,
+				cwd = "${workspaceFolder}",
+				stopAtBeginningOfMainSubprogram = true,
+			},
+		}
+
+		-- MCU debugging
 		-- Set up and register with nvim-dap
 		require("dap-cortex-debug").setup({
 			debug = false, -- log debug messages
@@ -51,46 +122,5 @@ return {
 
 			dap.configurations.c = c_table -- write back configuration to dap
 		end
-
-		-- Debugger keymap
-		vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
-		vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })
-		vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
-		vim.keymap.set("n", "<F3>", dap.step_out, { desc = "Debug: Step Out" })
-		vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
-		vim.keymap.set("n", "<leader>B", function()
-			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-		end, { desc = "Debug: Set Breakpoint" })
-
-		-- Dap UI setup
-		-- For more information, see |:help nvim-dap-ui|
-		local dapui = require("dapui")
-		dapui.setup({
-			-- Set icons to characters that are more likely to work in every terminal.
-			--    Feel free to remove or use ones that you like more! :)
-			--    Don't feel like these are good choices.
-			icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
-			controls = {
-				icons = {
-					pause = "⏸",
-					play = "▶",
-					step_into = "⏎",
-					step_over = "⏭",
-					step_out = "⏮",
-					step_back = "b",
-					run_last = "▶▶",
-					terminate = "⏹",
-					disconnect = "⏏",
-				},
-			},
-		})
-
-		-- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-		vim.keymap.set("n", "<F7>", dapui.toggle, { desc = "Debug: See last session result." })
-
-		dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-		dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-		dap.listeners.before.event_exited["dapui_config"] = dapui.close
-		-- config ends here
 	end,
 }
