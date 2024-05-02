@@ -14,4 +14,9 @@ return { -- Adds git related signs to the gutter, as well as utilities for manag
 			changedelete = { text = "~" },
 		},
 	},
+	config = function()
+		require("gitsigns").setup()
+		vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "[P]review hunk" })
+		vim.keymap.set("n", "<leader>gb", ":Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line [B]lame" })
+	end,
 }
