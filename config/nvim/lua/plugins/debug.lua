@@ -38,6 +38,7 @@ return {
 			dap.terminate()
 			dapui.close()
 		end, { desc = "[D]ebug: [Q]uit" })
+		vim.keymap.set("n", "<Leader>db", ":!meson compile -C build<CR>", { desc = "[D]ebug [B]uild code" })
 
 		-- Automatically open the different windows when starting DAP
 		dap.listeners.before.attach.dapui_config = function()
