@@ -48,8 +48,7 @@ return {
 		-- start debugging nvim automatically uses this configuration instead of asking
 		-- you to select from a list. Usually I want to debug the same target every time
 		-- and dont want to spend time selecting it from a list over and over.
-		local select_config_to_keep = function()
-			local dap = require("dap")
+		vim.keymap.set("n", "<Leader>dC", function()
 			local opts = {}
 			for _, v in pairs(dap.configurations.c) do
 				table.insert(opts, v["name"])
@@ -72,8 +71,7 @@ return {
 					dap.configurations[v] = { temp }
 				end
 			end)
-		end
-		vim.keymap.set("n", "<Leader>dC", select_config_to_keep, { desc = "[D]ebug: Select [C]onfiguration to keep" })
+		end, { desc = "[D]ebug: Select [C]onfiguration to keep" })
 
 		-- Automatically open the different windows when starting DAP
 		dap.listeners.before.attach.dapui_config = function()
@@ -156,24 +154,47 @@ return {
 		}
 
 		-- Make the launch configurations
-		for _, ft in pairs(debug_filetypes) do
-			dap.configurations[ft] = {}
-			for _, dev in pairs(devices) do
-				local launch_config = {
-					name = dev["device"] .. " (" .. dev["descr"] .. ")",
-					cwd = "${workspaceFolder}", -- Will be expanded to 'cwd' automatically
-					device = dev["device"],
-					executable = elf_file or function()
-						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-					end,
-					request = "launch",
-					runToEntryPoint = "main",
-					servertype = "jlink",
-					type = "cortex-debug",
-				}
-				table.insert(dap.configurations[ft], launch_config)
+		local load_launch_configs = function()
+			for _, ft in pairs(debug_filetypes) do
+				dap.configurations[ft] = {}
+				for _, dev in pairs(devices) do
+					-- Launch configuration
+					local launch = {
+						name = dev["device"] .. " (" .. dev["descr"] .. ") [Launch]",
+						cwd = "${workspaceFolder}", -- Will be expanded to 'cwd' automatically
+						device = dev["device"],
+						executable = elf_file or function()
+							return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+						end,
+						servertype = "jlink",
+						type = "cortex-debug",
+						request = "launch",
+						runToEntryPoint = "main",
+					}
+
+					-- Attach configurations
+					local attach = {
+						name = dev["device"] .. " (" .. dev["descr"] .. ") [Attach]",
+						cwd = "${workspaceFolder}", -- Will be expanded to 'cwd' automatically
+						device = dev["device"],
+						executable = elf_file or function()
+							return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+						end,
+						servertype = "jlink",
+						type = "cortex-debug",
+						request = "attach",
+					}
+					table.insert(dap.configurations[ft], launch)
+					table.insert(dap.configurations[ft], attach)
+				end
 			end
+			-- print(vim.inspect(dap.configurations.c))
 		end
-		-- print(vim.inspect(dap.configurations.c))
+
+		-- Load them by defualt
+		load_launch_configs()
+
+		-- Force reload of all configurations. Useful if removed by <Leader>dC
+		vim.keymap.set("n", "<Leader>dL", load_launch_configs, { desc = "[D]ebug [L]oad launch configurations" })
 	end,
 }
