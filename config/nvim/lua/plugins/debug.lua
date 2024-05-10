@@ -82,20 +82,6 @@ return {
 			args = { "-i", "dap" },
 		}
 
-		-- Add a basic debug configuration for native C programs
-		dap.configurations.c = {
-			{
-				name = "Launch",
-				type = "gdb",
-				request = "launch",
-				program = function()
-					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-				end,
-				cwd = "${workspaceFolder}",
-				stopAtBeginningOfMainSubprogram = true,
-			},
-		}
-
 		-- MCU debugging
 		-- Set up and register with nvim-dap
 		require("dap-cortex-debug").setup({
@@ -110,18 +96,45 @@ return {
 			dap_vscode_filetypes = { "c", "cpp", "netrw", "h" }, -- Added "netrw" so that you can get to the debugger menu from most places (i.e. not having to be in a c/h file)
 		})
 
-		require("dap.ext.vscode").json_decode = require("json5").parse
-		-- Hack that replaces '${workspaceRoot}' in the launch.json files with cwd so that the elf files are found by the debugger
-		-- Note that this will only work when launching nvim from the root directory of the project, so it's brittle
-		require("dap.ext.vscode").load_launchjs() -- load .vsocde/launch.json
-
-		local c_table = dap.configurations.c
-		if c_table ~= nil then
-			for _, v in pairs(c_table) do
-				v["cwd"] = vim.fn.getcwd() -- replaces ${workspaceRoot} with cwd
+		-- NOTE: Setup launch configurations
+		-- Try to find an .elf file in a 'build' directory
+		-- If not found then prompt the user for the path
+		local dirname = "build"
+		local build_files = io.popen("ls " .. dirname)
+		local elf_file = nil
+		for name in build_files:lines() do
+			if string.match(name, "%.elf$") then
+				elf_file = dirname .. "/" .. name
 			end
-
-			dap.configurations.c = c_table -- write back configuration to dap
 		end
+
+		-- Add the launch configuration for these filetypes
+		-- Essentially this means you can hit F5 to open the debug UI from a file of this type
+		local filetypes = { "c", "cpp", "netrw", "h" }
+
+		-- Target device to debug. Will be used as parameter to the debugger so extend at will
+		local devices = { "STM32L462VE", "STM32G473VE", "STM32L4S5VI", "LPC55S69_M33_0" }
+
+		-- Make the launch configurations
+		for _, ft in pairs(filetypes) do
+			dap.configurations[ft] = {}
+
+			for _, dev in pairs(devices) do
+				local launch_config = {
+					name = dev,
+					cwd = "${workspaceFolder}", -- Will be expanded to 'cwd' automatically
+					device = dev,
+					executable = elf_file or function()
+						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+					end,
+					request = "launch",
+					runToEntryPoint = "main",
+					servertype = "jlink",
+					type = "cortex-debug",
+				}
+				table.insert(dap.configurations[ft], launch_config)
+			end
+		end
+		-- print(vim.inspect(dap.configurations.c))
 	end,
 }
