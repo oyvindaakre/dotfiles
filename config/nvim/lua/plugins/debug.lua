@@ -21,6 +21,10 @@ return {
 
 		require("dapui").setup()
 
+		-- Add the launch configuration for these filetypes
+		-- Essentially this means you can hit F5 to open the debug UI from a file of this type
+		local debug_filetypes = { "c", "cpp", "netrw", "h" }
+
 		-- Debug keymap
 		vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })
 		vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
@@ -39,6 +43,37 @@ return {
 			dapui.close()
 		end, { desc = "[D]ebug: [Q]uit" })
 		vim.keymap.set("n", "<Leader>db", ":!meson compile -C build<CR>", { desc = "[D]ebug [B]uild code" })
+
+		-- Used to select a launch configuration to keep so that the next time you
+		-- start debugging nvim automatically uses this configuration instead of asking
+		-- you to select from a list. Usually I want to debug the same target every time
+		-- and dont want to spend time selecting it from a list over and over.
+		local select_config_to_keep = function()
+			local dap = require("dap")
+			local opts = {}
+			for _, v in pairs(dap.configurations.c) do
+				table.insert(opts, v["name"])
+			end
+
+			vim.ui.select(opts, { prompt = "Select configuration to keep" }, function(choice)
+				if choice == nil then
+					return
+				end
+				print("Keeping configuration " .. choice)
+
+				local temp = nil
+				for _, v in pairs(dap.configurations.c) do
+					if v["name"] == choice then
+						temp = v
+						break
+					end
+				end
+				for _, v in pairs(debug_filetypes) do
+					dap.configurations[v] = { temp }
+				end
+			end)
+		end
+		vim.keymap.set("n", "<Leader>dC", select_config_to_keep, { desc = "[D]ebug: Select [C]onfiguration to keep" })
 
 		-- Automatically open the different windows when starting DAP
 		dap.listeners.before.attach.dapui_config = function()
@@ -93,7 +128,7 @@ return {
 			node_path = "node", -- path to node.js executable
 			dapui_rtt = true, -- register nvim-dap-ui RTT element
 			-- make :DapLoadLaunchJSON register cortex-debug for C/C++, set false to disable
-			dap_vscode_filetypes = { "c", "cpp", "netrw", "h" }, -- Added "netrw" so that you can get to the debugger menu from most places (i.e. not having to be in a c/h file)
+			dap_vscode_filetypes = debug_filetypes,
 		})
 
 		-- NOTE: Setup launch configurations
@@ -102,17 +137,17 @@ return {
 		local dirname = "build"
 		local build_files = io.popen("ls " .. dirname)
 		local elf_file = nil
-		for name in build_files:lines() do
-			if string.match(name, "%.elf$") then
-				elf_file = dirname .. "/" .. name
+		if build_files ~= nil then
+			for name in build_files:lines() do
+				if string.match(name, "%.elf$") then
+					elf_file = dirname .. "/" .. name
+				end
 			end
 		end
 
-		-- Add the launch configuration for these filetypes
-		-- Essentially this means you can hit F5 to open the debug UI from a file of this type
-		local filetypes = { "c", "cpp", "netrw", "h" }
-
-		-- Target device to debug. Will be used as parameter to the debugger so extend at will
+		-- Target devices to debug.
+		-- The device name will be passed as a parameter to the debug probe.
+		-- NOTE: See also <Leader>dC key to select configuration to keep for this nvim session
 		local devices = {
 			{ device = "STM32L462VE", descr = "com, power" },
 			{ device = "STM32G473VE", descr = "power" },
@@ -121,9 +156,8 @@ return {
 		}
 
 		-- Make the launch configurations
-		for _, ft in pairs(filetypes) do
+		for _, ft in pairs(debug_filetypes) do
 			dap.configurations[ft] = {}
-
 			for _, dev in pairs(devices) do
 				local launch_config = {
 					name = dev["device"] .. " (" .. dev["descr"] .. ")",
