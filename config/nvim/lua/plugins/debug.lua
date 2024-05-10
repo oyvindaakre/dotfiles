@@ -113,7 +113,12 @@ return {
 		local filetypes = { "c", "cpp", "netrw", "h" }
 
 		-- Target device to debug. Will be used as parameter to the debugger so extend at will
-		local devices = { "STM32L462VE", "STM32G473VE", "STM32L4S5VI", "LPC55S69_M33_0" }
+		local devices = {
+			{ device = "STM32L462VE", descr = "com, power" },
+			{ device = "STM32G473VE", descr = "power" },
+			{ device = "STM32L4S5VI", descr = "power" },
+			{ device = "LPC55S69_M33_0", descr = "power" },
+		}
 
 		-- Make the launch configurations
 		for _, ft in pairs(filetypes) do
@@ -121,9 +126,9 @@ return {
 
 			for _, dev in pairs(devices) do
 				local launch_config = {
-					name = dev,
+					name = dev["device"] .. " (" .. dev["descr"] .. ")",
 					cwd = "${workspaceFolder}", -- Will be expanded to 'cwd' automatically
-					device = dev,
+					device = dev["device"],
 					executable = elf_file or function()
 						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
 					end,
