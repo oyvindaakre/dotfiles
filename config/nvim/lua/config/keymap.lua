@@ -36,3 +36,8 @@ vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line up(n)" })
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line down(n)" })
 vim.keymap.set("n", "<Leader>o", "o<ESC>", { desc = "Add newline below no insert" })
 vim.keymap.set("n", "<Leader>O", "O<ESC>", { desc = "Add newline above no insert" })
+
+vim.keymap.set("i", "<C-e>", "<C-o>A", { desc = "Move to end of line in insert mode" })
+vim.keymap.set("n", "<C-e>", "$", { desc = "Move to end of line in normal mode" })
+vim.keymap.set("i", "<C-a>", "<C-o>I", { desc = "Move to start of line in insert mode" })
+vim.keymap.set("n", "<C-a>", "^", { desc = "Move to start of line in normal mode" })
