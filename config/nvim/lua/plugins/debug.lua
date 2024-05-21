@@ -42,7 +42,7 @@ return {
 			dap.terminate()
 			dapui.close()
 		end, { desc = "[D]ebug: [Q]uit" })
-		vim.keymap.set("n", "<Leader>db", ":!meson compile -C build<CR>", { desc = "[D]ebug [B]uild code" })
+		vim.keymap.set("n", "<Leader>db", ":!ninja -C build<CR>", { desc = "[D]ebug [B]uild code" })
 
 		-- Used to select a launch configuration to keep so that the next time you
 		-- start debugging nvim automatically uses this configuration instead of asking
