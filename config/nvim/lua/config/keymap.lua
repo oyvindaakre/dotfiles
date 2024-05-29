@@ -1,7 +1,5 @@
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
--- Maps CTRL-å to ESC in normal mode (see also better_escape)
-vim.keymap.set("i", "<C-å>", "<Esc>", { desc = "Enter normal mode" })
 vim.keymap.set({ "n", "v" }, "¤", "<End>", { desc = "End of line" }) -- Same as $ on English keyboard
 
 -- Diagnostic keymaps
