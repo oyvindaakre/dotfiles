@@ -35,9 +35,10 @@ return {
 		-- 	harpoon:list():next()
 		-- end)
 
-		vim.keymap.set("n", "<leader>hc", function()
+		vim.keymap.set("n", "<leader>ha", function()
 			harpoon:list():clear()
-		end, { desc = "Clear the Harpoon list" })
+			harpoon:list():add()
+		end, { desc = "Clear the Harpoon list AND add to list" })
 
 		vim.keymap.set("n", "<leader>hr", function()
 			harpoon:list():remove()
