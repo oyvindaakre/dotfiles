@@ -14,12 +14,14 @@ return {
 			run = "./install.sh",
 		},
 		"jedrzejboczar/nvim-dap-cortex-debug", -- An extension for nvim-dap providing integration with Marus/cortex-debug debug adapter.
+		"theHamsta/nvim-dap-virtual-text",
 	},
 	config = function()
 		local dap = require("dap")
 		local dapui = require("dapui")
 
 		require("dapui").setup()
+		require("nvim-dap-virtual-text").setup()
 
 		-- Add the launch configuration for these filetypes
 		-- Essentially this means you can hit F5 to open the debug UI from a file of this type
