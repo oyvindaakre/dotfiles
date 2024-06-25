@@ -19,6 +19,7 @@ return {
 	config = function()
 		local dap = require("dap")
 		local dapui = require("dapui")
+		local criterion_debug = require("criterion-debug")
 
 		require("dapui").setup()
 		require("nvim-dap-virtual-text").setup()
@@ -190,6 +191,24 @@ return {
 					table.insert(dap.configurations[ft], launch)
 					table.insert(dap.configurations[ft], attach)
 				end
+
+				-- Add a basic debug configuration for native C programs
+				local native_debug = {
+					name = "Native GDB",
+					type = "gdb",
+					request = "attach", --- <---- important for criterion debug
+					-- program = elf_file or function()
+					-- 	return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+					-- end,
+					program = function()
+						criterion_debug.debug_line()
+						return criterion_debug.get_executable_at_cursor()
+					end,
+					cwd = "${workspaceFolder}",
+					stopAtBeginningOfMainSubprogram = true,
+					target = "localhost:1234",
+				}
+				table.insert(dap.configurations[ft], native_debug)
 			end
 			-- print(vim.inspect(dap.configurations.c))
 		end
