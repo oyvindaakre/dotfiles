@@ -82,3 +82,8 @@ vim.api.nvim_create_user_command("C", function()
 	require("lazy.core.loader").reload("quicktest.nvim")
 	print("Reloading quicktest")
 end, {})
+
+vim.api.nvim_create_user_command("D", function()
+	require("lazy.core.loader").reload("criterion-debug.nvim")
+	print("Reloading criterion-debug")
+end, {})
