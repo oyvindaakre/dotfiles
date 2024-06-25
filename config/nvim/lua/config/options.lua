@@ -63,3 +63,17 @@ vim.opt.scrolloff = 10
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
+
+-- Add new line to the end of the file
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+	group = vim.api.nvim_create_augroup("UserOnSave", {}),
+	pattern = { "*.c", "*.h" },
+	callback = function()
+		local n_lines = vim.api.nvim_buf_line_count(0)
+		local last_nonblank = vim.fn.prevnonblank(n_lines)
+		local last_line = vim.api.nvim_buf_get_lines(0, last_nonblank, last_nonblank + 1, false)
+		if next(last_line) == nil then
+			vim.api.nvim_buf_set_lines(0, last_nonblank, n_lines, true, { "" })
+		end
+	end,
+})
