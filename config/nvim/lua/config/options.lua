@@ -66,24 +66,24 @@ vim.opt.hlsearch = true
 
 -- Add new line to the end of the file
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-	group = vim.api.nvim_create_augroup("UserOnSave", {}),
-	pattern = { "*.c", "*.h" },
-	callback = function()
-		local n_lines = vim.api.nvim_buf_line_count(0)
-		local last_nonblank = vim.fn.prevnonblank(n_lines)
-		local last_line = vim.api.nvim_buf_get_lines(0, last_nonblank, last_nonblank + 1, false)
-		if next(last_line) == nil then
-			vim.api.nvim_buf_set_lines(0, last_nonblank, n_lines, true, { "" })
-		end
-	end,
+  group = vim.api.nvim_create_augroup("UserOnSave", {}),
+  pattern = { "*.c", "*.h" },
+  callback = function()
+    local n_lines = vim.api.nvim_buf_line_count(0)
+    local last_nonblank = vim.fn.prevnonblank(n_lines)
+    local last_line = vim.api.nvim_buf_get_lines(0, last_nonblank, last_nonblank + 1, false)
+    if next(last_line) == nil then
+      vim.api.nvim_buf_set_lines(0, last_nonblank, n_lines, true, { "" })
+    end
+  end,
 })
 
 vim.api.nvim_create_user_command("C", function()
-	require("lazy.core.loader").reload("quicktest.nvim")
-	print("Reloading quicktest")
+  require("lazy.core.loader").reload("quicktest.nvim")
+  print("Reloading quicktest")
 end, {})
 
 vim.api.nvim_create_user_command("D", function()
-	require("lazy.core.loader").reload("criterion-debug.nvim")
-	print("Reloading criterion-debug")
+  require("lazy.core.loader").reload("dtools.nvim")
+  print("Reloading dtools")
 end, {})
