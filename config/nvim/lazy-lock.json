@@ -34,10 +34,9 @@
   "nvim-treesitter": { "branch": "master", "commit": "9d80c1497ec343f81c0c5800b65f2e73ca569025" },
   "nvim-web-devicons": { "branch": "master", "commit": "c0cfc1738361b5da1cd0a962dd6f774cc444f856" },
   "plenary.nvim": { "branch": "master", "commit": "a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683" },
-  "quicktest.nvim": { "branch": "main", "commit": "9a029d4ed5e48ec41e7bcd2a84ae966f0994d287" },
+  "quicktest.nvim": { "branch": "add-meson-plugin", "commit": "b32b337837e98156c5abf8dfa33bc4f4bb79524a" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "9ef21b2e6bb6ebeaf349a0781745549bbb870d27" },
   "telescope-ui-select.nvim": { "branch": "master", "commit": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2" },
   "telescope.nvim": { "branch": "0.1.x", "commit": "a0bbec21143c7bc5f8bb02e0005fa0b982edc026" },
   "todo-comments.nvim": { "branch": "main", "commit": "51e10f838e84b4756c16311d0b1ef0972c6482d2" },
   "which-key.nvim": { "branch": "main", "commit": "0099511294f16b81c696004fa6a403b0ae61f7a0" }
-}
