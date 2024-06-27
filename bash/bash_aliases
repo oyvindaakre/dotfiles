@@ -1,0 +1,33 @@
+if [ "${TERM: -5}" = "kitty" ]; then
+	bash_prompt_color_force=1
+	source /etc/profile.d/bash-color-prompt.sh
+fi
+
+
+PROMPT_COLOR='1;32'
+PROMPT_DIR_COLOR='1;34'
+export PATH=/home/oyvind/arm-none-eabi-gcc/bin:$PATH
+
+source python3.10/bin/activate
+
+function ser {
+	#script "${HOME}/session.log" &
+	screen /dev/ttyUSB$1 115200
+}
+
+
+function mtsser {
+	stty -F /dev/ttyUSB$1 115200
+	cat /dev/ttyUSB$1 | ts '%.T'
+}
+
+
+function tsser {
+	stty -F /dev/ttyUSB$1 115200
+	cat /dev/ttyUSB$1 | ts '%H:%M:%S'
+}
+
+alias ser?='ls /dev | grep ttyUSB'
+
+export XDG_CACHE_HOME=/home/oyvind/clangd/cache
+
