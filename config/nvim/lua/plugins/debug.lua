@@ -44,6 +44,7 @@ return {
     local debug_filetypes = { "c", "cpp", "netrw", "h" }
 
     -- Debug keymap
+    vim.keymap.set("n", "<leader>dt", dtools.debug_test, { desc = "Debug: Test" })
     vim.keymap.set("n", "<F3>", dap.step_into, { desc = "Debug: Step Into" })
     vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
     vim.keymap.set("n", "<F4>", dap.step_out, { desc = "Debug: Step Out" })
@@ -56,7 +57,6 @@ return {
       dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
     end, { desc = "Debug: Set Breakpoint" })
     vim.keymap.set("n", "<Leader>dc", dap.continue, { desc = "Debug: Start/Continue" })
-    vim.keymap.set("n", "<Leader>dt", dap.terminate, { desc = "Debug: Terminate " })
     vim.keymap.set("n", "<Leader>dq", function()
       dap.terminate()
       dapui.close()
@@ -213,12 +213,12 @@ return {
           type = "gdb",
           request = "attach",
           program = function()
-            local _, err = dtools.start_debug_server()
+            local exe, err = dtools.start_debug_server()
             if err ~= nil then
               print(err)
               return nil
             end
-            return dtools.get_executable_at_cursor()
+            return exe
           end,
           cwd = "${workspaceFolder}",
           stopAtBeginningOfMainSubprogram = true,
