@@ -14,6 +14,8 @@ return {
             local builddir
             if string.find(bufname, "quicktest.nvim") ~= nil then
               builddir = "tests/support/criterion/build"
+            elseif string.find(bufname, "dtools.nvim") ~= nil then
+              builddir = "tests/build"
             else
               builddir = "build"
             end
