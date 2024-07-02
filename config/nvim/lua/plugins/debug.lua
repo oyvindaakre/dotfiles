@@ -30,11 +30,13 @@ return {
         elseif string.find(bufname, "dtools.nvim") ~= nil then
           builddir = "tests/build"
         else
-          builddir = "build"
+          builddir = "build-utest"
         end
         return builddir
       end,
     })
+
+    local header = require("dtools.header")
 
     require("dapui").setup()
     require("nvim-dap-virtual-text").setup()
@@ -61,7 +63,10 @@ return {
       dap.terminate()
       dapui.close()
     end, { desc = "[D]ebug: [Q]uit" })
-    vim.keymap.set("n", "<Leader>db", ":!ninja -C build<CR>", { desc = "[D]ebug [B]uild code" })
+    vim.keymap.set("n", "<Leader>db", function()
+      vim.cmd("!ninja -C " .. dtools.get_builddir())
+    end, { desc = "[D]ebug [B]uild code" })
+    vim.keymap.set("n", "<leader>hg", header.insert_header_guard, { desc = "[H]eader [G]uard" })
 
     -- Used to select a launch configuration to keep so that the next time you
     -- start debugging nvim automatically uses this configuration instead of asking
