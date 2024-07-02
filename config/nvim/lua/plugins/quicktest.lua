@@ -17,15 +17,12 @@ return {
             elseif string.find(bufname, "dtools.nvim") ~= nil then
               builddir = "tests/build"
             else
-              builddir = "build"
+              builddir = "build-utest"
             end
             print("bufnr: " .. tostring(bufnr))
             print("bufname: " .. bufname)
             print("using builddir: " .. builddir)
             return builddir
-          end,
-          additional_args = function(bufnr)
-            return { "--timeout=1" }
           end,
         }),
       },
@@ -84,6 +81,14 @@ return {
         qt.toggle_win("split")
       end,
       desc = "[T]est Toggle [S]plit window",
+    },
+    {
+      "<leader>ta",
+      function()
+        local qt = require("quicktest")
+        qt.run_all()
+      end,
+      desc = "[T]est Run [A]ll",
     },
   },
 }
