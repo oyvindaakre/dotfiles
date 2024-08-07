@@ -29,8 +29,10 @@ return {
           builddir = "tests/support/criterion/build"
         elseif string.find(bufname, "dtools.nvim") ~= nil then
           builddir = "tests/build"
-        else
+        elseif string.find(bufname, "test_") ~= nil then
           builddir = "build-utest"
+        else
+          builddir = "build"
         end
         return builddir
       end,
