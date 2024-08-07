@@ -7,7 +7,7 @@ return {
       standard_widths = { 2, 4 },
 
       filetype_c = {
-        standard_widths = { 2, 4 },
+        standard_widths = { 4, 8 },
       },
 
       -- Only detect 4 spaces and tabs for Rust files
@@ -20,5 +20,6 @@ return {
         standard_widths = { 2, 4 },
       },
     })
+    -- vim.cmd("autocmd! indent_o_matic")
   end,
 }
