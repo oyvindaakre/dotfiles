@@ -7,7 +7,7 @@ return {
       standard_widths = { 2, 4 },
 
       filetype_c = {
-        standard_widths = { 4, 8 },
+        standard_widths = { 4 },
       },
 
       -- Only detect 4 spaces and tabs for Rust files
