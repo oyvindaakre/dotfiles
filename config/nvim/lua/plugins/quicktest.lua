@@ -26,6 +26,7 @@ return {
           end,
         }),
       },
+      default_win_mode = "popup",
     })
   end,
   dependencies = {
