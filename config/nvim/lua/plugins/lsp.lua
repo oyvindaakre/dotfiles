@@ -197,6 +197,7 @@ return { -- LSP Configuration & Plugins
     local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
       "stylua", -- Used to format Lua code
+      { "clangd", version = "18.1.3" },
     })
     require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
