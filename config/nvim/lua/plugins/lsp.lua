@@ -196,8 +196,8 @@ return { -- LSP Configuration & Plugins
     local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
       "stylua", -- Used to format Lua code
-      "cortex-debug",
       { "clangd", version = "19.1.0" },
+      { "cortex-debug", version = "1.12.1" },
     })
     require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
