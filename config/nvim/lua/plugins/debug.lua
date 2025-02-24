@@ -155,20 +155,34 @@ return {
       dap_vscode_filetypes = debug_filetypes,
     })
 
+    --NOTE: Utility function to find executables for debugging
+    local function find_exe(dirname, filename)
+      local prompt = "find " .. dirname .. "/ -maxdepth 1"
+      if filename == nil or filename == "" then
+        prompt = prompt .. " -executable -type f"
+      else
+        prompt = prompt .. " -name '" .. filename .. "'"
+      end
+
+      local build_files = io.popen(prompt)
+      if build_files == nil then
+        return nil
+      end
+
+      for name in build_files:lines() do
+        return name
+      end
+
+      return nil
+    end
+
     -- NOTE: Setup launch configurations
     -- Try to find an .elf file in a 'build' directory
     -- If not found then prompt the user for the path
-    local dirname = "build"
-    local build_files = io.popen("ls " .. dirname)
     local elf_file = nil
-    if build_files ~= nil then
-      for name in build_files:lines() do
-        if string.match(name, "%.elf$") then
-          elf_file = dirname .. "/" .. name
-        end
-      end
-    end
-
+      or find_exe("build", "main_debugger.elf")
+      or find_exe("build", "main.elf")
+      or find_exe("build/zephyr", "zephyr.elf")
     -- Target devices to debug.
     -- The device name will be passed as a parameter to the debug probe.
     -- NOTE: See also <Leader>dC key to select configuration to keep for this nvim session
