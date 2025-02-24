@@ -246,6 +246,19 @@ return {
           target = "localhost:1234",
         }
         table.insert(dap.configurations[ft], debug_unit_test)
+
+        -- Add a configuration for debugging native apps
+        local debug_native_app = {
+          name = "Debug native",
+          type = "gdb",
+          request = "launch",
+          program = find_exe("build") or function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          cwd = "${workspaceFolder}",
+          stopAtBeginningOfMainSubprogram = true,
+        }
+        table.insert(dap.configurations[ft], debug_native_app)
       end
       -- print(vim.inspect(dap.configurations.c))
     end
