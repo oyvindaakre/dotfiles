@@ -41,3 +41,5 @@ vim.keymap.set("i", "<C-e>", "<C-o>A", { desc = "Move to end of line in insert m
 vim.keymap.set("n", "<C-e>", "$", { desc = "Move to end of line in normal mode" })
 vim.keymap.set("i", "<C-a>", "<C-o>I", { desc = "Move to start of line in insert mode" })
 vim.keymap.set("n", "<C-a>", "^", { desc = "Move to start of line in normal mode" })
+vim.keymap.set("n", "<leader>hh", '<CMD>ClangdSwitchSourceHeader<CR>', { desc = "Toggle source and header files" })
+
