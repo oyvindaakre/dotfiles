@@ -182,6 +182,7 @@ return {
     local elf_file = nil
       or find_exe("build", "main_debugger.elf")
       or find_exe("build", "main.elf")
+      or find_exe("build", "*.elf")
       or find_exe("build/zephyr", "zephyr.elf")
     -- Target devices to debug.
     -- The device name will be passed as a parameter to the debug probe.
