@@ -6,8 +6,6 @@ return {
     qt.setup({
       -- Choose your adapter, here all supported adapters are listed
       adapters = {
-        require("quicktest.adapters.golang"),
-        require("quicktest.adapters.vitest"),
         require("quicktest.adapters.criterion")({
           builddir = function(bufnr)
             local bufname = vim.api.nvim_buf_get_name(bufnr)
@@ -27,6 +25,8 @@ return {
         }),
       },
       default_win_mode = "popup",
+      use_baleia = false,
+      use_experimental_colorizer = false,
     })
   end,
   dependencies = {
