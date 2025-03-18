@@ -24,7 +24,8 @@ return {
       pattern = "c",
       callback = function()
         vim.opt_local.shiftwidth = 4
-        vim.opt_local.tabstop = 4
+        vim.opt_local.tabstop = 8 -- recommended to be different than shiftwidth to be able to detect actual tab characters
+        vim.opt_local.expandtab = true
       end,
     })
     -- vim.cmd("autocmd! indent_o_matic")
