@@ -1,7 +1,3 @@
-# Install git credential on Fedora
+# Notes
 
-```bash
-sudo dnf install git-credential-libsecret
-git config --global set credential.helper libsecret
-```
 
