@@ -44,6 +44,11 @@ return { -- LSP Configuration & Plugins
     --    That is to say, every time a new file is opened that is associated with
     --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
     --    function will be executed to configure the current buffer
+    --
+    --  Disable the LSP log as it can become quite large. Enable if needed
+    --  See also: https://neovim.discourse.group/t/lsp-log-file-grows-infinitely/3596
+    vim.lsp.set_log_level("off")
+
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
       callback = function(event)
