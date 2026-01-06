@@ -47,7 +47,7 @@ return { -- LSP Configuration & Plugins
     --
     --  Disable the LSP log as it can become quite large. Enable if needed
     --  See also: https://neovim.discourse.group/t/lsp-log-file-grows-infinitely/3596
-    vim.lsp.set_log_level("off")
+    vim.lsp.set_log_level("OFF")
 
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
