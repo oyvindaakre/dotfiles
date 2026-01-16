@@ -3,3 +3,9 @@ keybinding:
     moveDownCommit: <c-v>
     moveUpCommit: <c-u>
 
+git:
+  autoForwardBranches: none
+
+gui:
+  useHunkModeInStagingView: true
+
