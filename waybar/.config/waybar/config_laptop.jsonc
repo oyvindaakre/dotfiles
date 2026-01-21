@@ -1,0 +1,6 @@
+{
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar position (top|bottom|left|right)
+    "output": "eDP-1",
+    "include": ["~/.config/waybar/common.jsonc"]
+}

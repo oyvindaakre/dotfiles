@@ -1,7 +1,4 @@
 {
-    "layer": "top", // Waybar at top layer
-    "position": "top", // Waybar position (top|bottom|left|right)
-    "output": "DP-2",
     // "width": 1280, // Waybar width
     // Choose the order of the modules
     "spacing": 4, // Gaps between modules (4px)
