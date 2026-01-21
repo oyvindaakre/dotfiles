@@ -1,19 +1,18 @@
 {
     "layer": "top", // Waybar at top layer
     "position": "top", // Waybar position (top|bottom|left|right)
+    "output": "DP-2",
     // "width": 1280, // Waybar width
     // Choose the order of the modules
     "spacing": 4, // Gaps between modules (4px)
     "modules-left": [
         "hyprland/workspaces"
     ],
-    "modules-center": [
-        //"hyprland/window",
-        "clock", 
-    ],
+    //"modules-center": [],
     "modules-right": [
         "pulseaudio", 
         "network", 
+        "clock",
         "backlight", 
         "tray", 
         "battery", 
@@ -23,6 +22,7 @@
     "hyprland/workspaces": {
         "disable-scroll": true,
         //"sort-by-name": true,
+        "all-outputs": true,
         "format": " {icon} ",
         "format-icons": {
             "default": "",
@@ -30,7 +30,7 @@
         },
     },
     "tray": {
-        "icon-size": 21,
+        "icon-size": 16,
         "spacing": 10
     },
     "clock": {
@@ -50,7 +50,7 @@
             "critical": 15
         },
         "format": "{icon}",
-        "format-charging": "",
+        "format-charging": "󰂄",
         "format-plugged": "",
         "format-alt": "{icon}",
         "format-icons": ["", "", "", "", ""]
@@ -67,29 +67,29 @@
     "custom/lock": {
         "tooltip": false,
         "on-click": "sh -c '(sleep 0.5s; hyprlock --grace 0)' & disown",
-        "format": "",
+        "format": "  ",
     },
     "custom/power": {
-        "format" : "⏻ ",
+        "format" : " ⏻ ",
         "tooltip": false,
         "on-click": "wlogout &",
 		"menu": "on-click",
 		"menu-file": "$HOME/.config/waybar/power_menu.xml", // Menu file in resources folder
 		"menu-actions": {
-			"shutdown": "shutdown",
+			"shutdown": "systemctl shutdown",
 			"reboot": "reboot",
 			"suspend": "systemctl suspend",
-			"hibernate": "systemctl hibernate"
 		}
     },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-wifi": "{icon}",
+        "format-icons": ["󰤟 ", "󰤢 ", "󰤥 ", "󰤨 "],
         "format-ethernet": "{ipaddr}/{cidr} ",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)",
         "tooltip-format": "{ifname} via {gwaddr} ",
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "Disconnected ⚠",
         "format-alt": "{ifname}: {ipaddr}/{cidr}",
-       // "max-length": 32,
     },
 }

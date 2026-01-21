@@ -1,6 +1,6 @@
 * {
-    font-family: 'Noto Sans Mono', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
-    font-size: 13px;
+    font-family: 'CommitMono Nerd Font', 'FantasqueSansMono Nerd Font', 'Hack Nerd Font', monospace;
+    font-size: 18px;
 }
 
 window#waybar {
