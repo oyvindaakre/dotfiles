@@ -287,6 +287,8 @@ layout {
 spawn-at-startup "qs" "-c" "noctalia-shell"
 
 spawn-at-startup "hypridle"
+spawn-at-startup "ibus-daemon -drx"
+
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 
