@@ -283,6 +283,8 @@ layout {
 
 // Try to run noctalia on boot
 spawn-at-startup "qs" "-c" "noctalia-shell"
+
+spawn-at-startup "hypridle"
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 
