@@ -42,3 +42,6 @@ vim.keymap.set("n", "<C-e>", "$", { desc = "Move to end of line in normal mode" 
 vim.keymap.set("i", "<C-a>", "<C-o>I", { desc = "Move to start of line in insert mode" })
 vim.keymap.set("n", "<C-a>", "^", { desc = "Move to start of line in normal mode" })
 vim.keymap.set("n", "<leader>hh", "<CMD>LspClangdSwitchSourceHeader<CR>", { desc = "Toggle source and header files" })
+
+-- Copy filename only
+vim.keymap.set("n", "<leader>cn", '<cmd>let @+ = expand("%:t")<CR>', { desc = "Copy filename" })
