@@ -143,6 +143,20 @@ return { -- LSP Configuration & Plugins
       end,
     })
 
+    -- Refresh semantic tokens when clangd finishes parsing a specific file's TU.
+    -- clangd sends this notification per-file; state "idle" means it is ready to
+    -- serve semantic tokens. Without this, files opened before the TU is parsed
+    -- get partial highlighting and require a manual :e to fix.
+    vim.lsp.handlers["textDocument/clangd.fileStatus"] = function(_, result)
+      if not result or result.state ~= "idle" then
+        return
+      end
+      local bufnr = vim.uri_to_bufnr(result.uri)
+      if vim.api.nvim_buf_is_loaded(bufnr) then
+        pcall(vim.lsp.semantic_tokens.force_refresh, bufnr)
+      end
+    end
+
     -- LSP servers and clients are able to communicate to each other what features they support.
     --  By default, Neovim doesn't support everything that is in the LSP specification.
     --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
